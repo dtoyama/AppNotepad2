@@ -1,6 +1,9 @@
 package dantets.appnotepad.com.appnotepad2.Activities;
 
+
+
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,8 +16,13 @@ import android.transition.Transition;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 
+import dantets.appnotepad.com.appnotepad2.Fragments.MainFragment;
+import dantets.appnotepad.com.appnotepad2.Fragments.PendientesFragment;
+import dantets.appnotepad.com.appnotepad2.Fragments.SuperMercadoFragment;
+import dantets.appnotepad.com.appnotepad2.Fragments.VacacionesFragment;
 import dantets.appnotepad.com.appnotepad2.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer);
+        fab = findViewById(R.id.fab);
         navigationView = findViewById(R.id.navigationView);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -44,18 +54,16 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.principal:
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        MainActivity fragment = new MainActivity();
-
-                        transaction.replace(R.id.fragment, fragment);
-                        transaction.commit();
+                        setFragment(0);
                         break;
                     case R.id.supermercado:
+                        setFragment(1);
                         break;
                     case R.id.pendientes:
+                        setFragment(2);
                         break;
                     case R.id.vacaciones:
+                        setFragment(3);
                         break;
 
                 }
@@ -79,5 +87,41 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        setFragment(0);
+    }
+
+    public void setFragment(int pos) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        switch (pos) {
+            case 0:
+                MainFragment fragment = new MainFragment();
+                transaction.replace(R.id.fragment, fragment);
+                transaction.commit();
+                break;
+            case 1:
+                SuperMercadoFragment fragmentSuperMercado = new SuperMercadoFragment();
+                transaction.replace(R.id.fragment, fragmentSuperMercado);
+                transaction.commit();
+                break;
+            case 2:
+                PendientesFragment fragmentPendientes = new PendientesFragment();
+                transaction.replace(R.id.fragment, fragmentPendientes);
+                transaction.commit();
+                break;
+            case 3:
+                VacacionesFragment fragmentVacaciones = new VacacionesFragment();
+                transaction.replace(R.id.fragment, fragmentVacaciones);
+                transaction.commit();
+                break;
+        }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "FAB", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
